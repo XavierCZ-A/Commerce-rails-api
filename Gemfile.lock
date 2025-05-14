@@ -74,8 +74,10 @@ GEM
       uri (>= 0.13.1)
     ast (2.4.3)
     base64 (0.2.0)
+    bcrypt (3.1.20)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
+    blueprinter (1.1.2)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     brakeman (7.0.2)
@@ -88,6 +90,7 @@ GEM
     debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    dotenv (3.1.8)
     drb (2.2.1)
     erubi (1.13.1)
     globalid (1.2.1)
@@ -100,6 +103,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.11.3)
+    jwt (2.10.1)
+      base64
     language_server-protocol (3.17.0.4)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -264,9 +269,13 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  bcrypt (~> 3.1.7)
+  blueprinter
   bootsnap
   brakeman
   debug
+  dotenv
+  jwt
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 8.0.2)
