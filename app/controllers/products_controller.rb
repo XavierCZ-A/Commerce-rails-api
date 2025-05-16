@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1
   def show
-    render json: @product
+    render json: ProductBlueprint.render(@product)
   end
 
   # POST /products
@@ -19,7 +19,7 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
-      render json: @product, status: :created
+      render json: ProductBlueprint.render(@product), status: :created
     else
       render json: @product.errors, status: :unprocessable_entity
     end
@@ -28,7 +28,7 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/1
   def update
     if @product.update(product_params)
-      render json: @product
+      render json: ProductBlueprint.render(@product)
     else
       render json: @product.errors, status: :unprocessable_entity
     end

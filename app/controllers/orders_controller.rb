@@ -1,15 +1,25 @@
 class OrdersController < ApplicationController
-  def create
-    @order = Order.new(order_params)
-    if @order.save
-      render json: @order, status: :created
-    else
-      render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity
-    end
+  def index
+    orders = @current_user.orders
+    render json: { orders: orders }, status: :ok
   end
 
-  private
-  def order_params
-    params.expect(order: [ :total_amount, :status ])
+  def create
+    cart = current_active_cart
+    if cart.nil? || cart.cart_items.empty?
+      render json: { error: "Carrito vacío" }, status: :unprocessable_entity and return
+    end
+
+    checkout_service = CheckoutService.new(@current_user, cart, cart.total)
+
+    result = checkout_service.call
+
+    if result.order
+      render json: OrderBlueprint.render(result.order), status: :created
+    else
+      render json: { error: result.error }, status: :unprocessable_entity
+    end
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 end

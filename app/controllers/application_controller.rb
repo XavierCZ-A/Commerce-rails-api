@@ -17,8 +17,16 @@ class ApplicationController < ActionController::API
 
   def authenticate
     header = request.headers["Authorization"]
+    if header.blank?
+      render json: { error: "Token inválido" }, status: :unauthorized and return
+    end
     token = header.split(" ").last if header
     decode_token = JsonWebToken.decode(token)
     @current_user = User.find(decode_token[:user_id])
+  end
+
+  def current_active_cart
+    return nil unless @current_user
+    @current_active_cart ||= @current_user.active_cart
   end
 end

@@ -11,4 +11,9 @@ class User < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}"
   end
+
+  def active_cart
+    cart = carts.find_by(status: "active")
+    cart
+  end
 end

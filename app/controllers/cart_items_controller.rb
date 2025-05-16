@@ -20,7 +20,7 @@ class CartItemsController < ApplicationController
 
     cart_item = active_cart.cart_items.build(product: product, quantity: quantity_to_add)
     if cart_item.save
-      render json: cart_item, status: :created
+      render json: CartItemBlueprint.render(cart_item, view: :with_product), status: :created
     else
       render json: { error: cart_item.errors.full_messages }, status: :unprocessable_entity
     end
@@ -29,8 +29,16 @@ class CartItemsController < ApplicationController
   private
 
   def find_or_create_cart
-    @cart = Cart.find_or_create_by(user: @current_user)
-    @cart.update(status: 0) if @cart.status == 1
-    @cart
+    cart = Cart.find_by(user: @current_user, status: :active)
+
+    if cart.nil?
+      cart = Cart.find_by(user: @current_user, status: :abandoned)
+      if cart
+        cart.update!(status: :active)
+      else
+        cart = Cart.create!(user: @current_user, status: :active)
+      end
+    end
+    cart
   end
 end
